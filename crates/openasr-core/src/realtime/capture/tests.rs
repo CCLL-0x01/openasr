@@ -99,6 +99,19 @@ mod tests {
     }
 
     #[test]
+    fn resampler_handles_44_1khz_stereo_across_512_sample_chunks() {
+        let mut capture = engine(44_100, 2, 20);
+
+        // 1024 interleaved stereo samples become 512 mono samples,
+        // matching the callback shape that exposed the overflow.
+        let chunk = vec![0.1_f32; 1024];
+
+        for _ in 0..2 {
+            capture.push_f32_interleaved(&chunk).unwrap();
+        }
+    }
+
+    #[test]
     fn resamples_48khz_mono_to_16khz_frames_exactly() {
         let mut capture = engine(48_000, 1, 20);
         let samples = vec![0.25_f32; 960];
