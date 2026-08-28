@@ -208,7 +208,7 @@ impl CaptureEngine {
             output.push(f32_to_i16(a + (b - a) * fraction));
             self.resample_pos += self.resample_step;
         }
-        let consumed = self.resample_pos.floor() as usize;
+        let consumed = (self.resample_pos.floor() as usize).min(self.resample_input.len());
         if consumed > 0 {
             self.resample_input.drain(0..consumed);
             self.resample_pos -= consumed as f64;
